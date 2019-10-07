@@ -6,3 +6,4 @@ keras==2.2.5
 werkzeug
 flask_cors
 pillow
+gunicorn
