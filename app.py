@@ -11,14 +11,12 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_folder='../dist/static')
 CORS(app)
-
 MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 #MODEL_JSON_PATH = 'models/model.json'
-graph = tf.get_default_graph()
+
 #loaded_json_model = None
 #with open(MODEL_JSON_PATH) as json_model:
 #	loaded_model_json = json_model.read()
-model = load_model(MODEL_PATH)
 #model = model_from_json(loaded_model_json)
 #print(model.summary())
 
@@ -28,9 +26,11 @@ def predict(img_file):
 	x = np.expand_dims(x, axis=0)
 	# print("X", x.shape)
 	x = preprocess_input(x, mode='keras')
-	prediction = None
-	with graph.as_default():
-		prediction = model.predict(x)
+	#graph = tf.get_default_graph()
+	model = load_model(MODEL_PATH)
+	#prediction = None
+	#with graph.as_default():
+	prediction = model.predict(x)
 		# print("Prediction", prediction)
 	pred_class = np.argmax(prediction[0])
 	label = "Not Dangerous" if pred_class==1 else "Dangerous"
