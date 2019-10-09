@@ -24,10 +24,11 @@ MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 def load_detect_model():
 	MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 	model = load_model(MODEL_PATH)
+	return model
 	
 def predict(img_file):
-	gc.collect()
 	model = None
+	gc.collect()
 	model = load_detect_model()
 	img = image.load_img(img_file, target_size=(150,150))
 	x = image.img_to_array(img)
