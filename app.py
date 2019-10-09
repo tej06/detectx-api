@@ -13,7 +13,7 @@ app = Flask(__name__, static_folder='../dist/static')
 CORS(app)
 MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 #MODEL_JSON_PATH = 'models/model.json'
-
+model = load_model(MODEL_PATH)
 #loaded_json_model = None
 #with open(MODEL_JSON_PATH) as json_model:
 #	loaded_model_json = json_model.read()
@@ -27,7 +27,6 @@ def predict(img_file):
 	# print("X", x.shape)
 	x = preprocess_input(x, mode='keras')
 	#graph = tf.get_default_graph()
-	model = load_model(MODEL_PATH)
 	#prediction = None
 	#with graph.as_default():
 	prediction = model.predict(x)
