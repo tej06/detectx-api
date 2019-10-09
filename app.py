@@ -12,15 +12,15 @@ from flask_cors import CORS
 app = Flask(__name__, static_folder='../dist/static')
 CORS(app)
 
-# MODEL_PATH = 'models/detectx-39.hdf5'
-MODEL_JSON_PATH = 'models/model.json'
+MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
+#MODEL_JSON_PATH = 'models/model.json'
 graph = tf.get_default_graph()
-loaded_json_model = None
-with open(MODEL_JSON_PATH) as json_model:
-	loaded_model_json = json_model.read()
-# model = load_model(MODEL_PATH)
-model = model_from_json(loaded_model_json)
-# print(model.summary())
+#loaded_json_model = None
+#with open(MODEL_JSON_PATH) as json_model:
+#	loaded_model_json = json_model.read()
+model = load_model(MODEL_PATH)
+#model = model_from_json(loaded_model_json)
+#print(model.summary())
 
 def predict(img_file):
 	img = image.load_img(img_file, target_size=(150,150))
@@ -56,6 +56,7 @@ def classify():
 				'detectDanger': detectDanger
         	}
 		]
+		print('Response generated')
 		return jsonify(result)
 	return None
 
