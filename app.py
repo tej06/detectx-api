@@ -19,8 +19,15 @@ MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 #	loaded_model_json = json_model.read()
 #model = model_from_json(loaded_model_json)
 #print(model.summary())
+model = None
 
+def load_detect_model():
+	global model
+	MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
+	model = load_model(MODEL_PATH)
+	
 def predict(img_file):
+	global model
 	img = image.load_img(img_file, target_size=(150,150))
 	x = image.img_to_array(img)
 	x = np.expand_dims(x, axis=0)
@@ -29,7 +36,7 @@ def predict(img_file):
 	#graph = tf.get_default_graph()
 	#prediction = None
 	#with graph.as_default():
-	model = load_model(MODEL_PATH)
+	# model = load_model(MODEL_PATH)
 	prediction = model.predict(x)
 		# print("Prediction", prediction)
 	pred_class = np.argmax(prediction[0])
@@ -45,10 +52,10 @@ def classify():
 	elif request.method == "POST":
 		# print("Input", request.files)
 		img = request.files['image']
-		basepath = os.path.dirname(__file__)
-		img_path = os.path.join(basepath, 'uploads', secure_filename(img.filename))
-		img.save(img_path)
-		label, score, detectDanger = predict(img_path)
+		# basepath = os.path.dirname(__file__)
+		# img_path = os.path.join(basepath, 'uploads', secure_filename(img.filename))
+		# img.save(img_path)
+		label, score, detectDanger = predict(img)
 		result = [
         	{
                 'label': label,
@@ -68,4 +75,5 @@ def _build_cors_prelight_response():
     return response
 
 if __name__ == "__main__":
-  app.run()
+	load_detect_model()
+	app.run()
