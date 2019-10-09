@@ -8,6 +8,7 @@ from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+import gc
 
 app = Flask(__name__, static_folder='../dist/static')
 CORS(app)
@@ -19,15 +20,15 @@ MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 #	loaded_model_json = json_model.read()
 #model = model_from_json(loaded_model_json)
 #print(model.summary())
-model = None
 
 def load_detect_model():
-	global model
 	MODEL_PATH = 'models/detectx-mobilenet-40.hdf5'
 	model = load_model(MODEL_PATH)
 	
 def predict(img_file):
-	global model
+	gc.collect()
+	model = None
+	model = load_detect_model()
 	img = image.load_img(img_file, target_size=(150,150))
 	x = image.img_to_array(img)
 	x = np.expand_dims(x, axis=0)
@@ -75,5 +76,4 @@ def _build_cors_prelight_response():
     return response
 
 if __name__ == "__main__":
-	load_detect_model()
 	app.run()
